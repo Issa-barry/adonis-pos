@@ -12,6 +12,8 @@ import Aura from '@primeuix/themes/aura'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
+// 🔹 PrimeVue Directives (important pour v-styleclass)
+import StyleClass from 'primevue/styleclass'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -19,11 +21,11 @@ createInertiaApp<DefineComponent>({
   progress: { color: '#5468FF' },
   title: (title) => `${title} - ${appName}`,
 
-  resolve: (name) => {
+  resolve: async (name) => {
     const pages = import.meta.glob<DefineComponent>('../pages/**/*.vue')
-
-    const page: any = resolvePageComponent(`../pages/${name}.vue`, pages)
-
+    
+    const page = await resolvePageComponent(`../pages/${name}.vue`, pages)
+    
     return page
   },
 
@@ -37,6 +39,9 @@ createInertiaApp<DefineComponent>({
           preset: Aura,
         },
       })
-      .mount(el)
+      // 🔹 Enregistrer la directive StyleClass
+      .directive('styleclass', StyleClass)
+
+    return vueApp.mount(el)
   },
 })
